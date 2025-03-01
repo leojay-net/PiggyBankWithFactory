@@ -2,8 +2,9 @@ import {ethers} from "hardhat";
 import {AddressLike} from "ethers";
 
 
-async function deloy() {
-    const signer = await ethers.provider.getSigner();
+async function deploy() {
+    const deployer = await ethers.provider.getSigner();
+    console.log(`Deploying contracts with the account: ${deployer.address}`);
 
 
     const USDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7"
@@ -18,5 +19,16 @@ async function deloy() {
 
     const PiggyBankFactory = await ethers.deployContract("PiggyFactory", [tokenAddresses])
     await PiggyBankFactory.waitForDeployment()
+    console.log(`Auction Swap deployed to: ${PiggyBankFactory.target}`);
+  
+    console.log("Deployment completed successfully");
 
     }
+
+
+deploy().catch((error)=>{
+    console.error(error)
+    process.exit(1)
+})
+
+    
