@@ -19,7 +19,7 @@ async function deploy() {
 
     const PiggyBankFactory = await ethers.deployContract("PiggyFactory", [tokenAddresses])
     await PiggyBankFactory.waitForDeployment()
-    console.log(`Auction Swap deployed to: ${PiggyBankFactory.target}`);
+    console.log(`Piggy Bank deployed to: ${PiggyBankFactory.target}`);
   
     console.log("Deployment completed successfully");
 
