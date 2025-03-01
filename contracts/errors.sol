@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: MIT
+
+pragma solidity 0.8.28;
+
+error INVALID_DEADLINE();
+error INVALID_PURPOSE();
+error INVALID_ADDRESS();
+error INVALID_AMOUNT();
+error INVALID_BALANCE();
+error INVALID_ALLOWANCE();
+error DEADLINE_NOT_REACHED();
+error TRANSFER_FAILED();
+error UNAUTHORIZED();
+error CREATION_FAILED();
