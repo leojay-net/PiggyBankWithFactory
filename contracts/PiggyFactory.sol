@@ -17,6 +17,7 @@ contract PiggyFactory is Ownable {
     }
     uint256 totalPiggyBankCount;
     mapping(address => BankDetails[]) public bankDetails;
+    mapping(address => bool) isWithdrawn;
 
     address[3] public supportedTokens;
 
@@ -30,6 +31,11 @@ contract PiggyFactory is Ownable {
 
     constructor(address[3] memory _supportedTokens) Ownable(msg.sender) {
         supportedTokens = _supportedTokens;
+    }
+
+    modifier withdrawn(address _saver){
+        require(!isWithdrawn[_saver], "Already withdrawn");
+        _;
     }
 
     function createPiggyBank(string memory _purpose, uint256 _endTime) public {
@@ -58,7 +64,7 @@ contract PiggyFactory is Ownable {
         emit PiggyBankCreated(msg.sender, piggyBankAddress, _purpose, _endTime);
     }
 
-    function savePiggyBank(address _piggyBankAddress, address _tokenAddress, uint256 _value) public {
+    function savePiggyBank(address _piggyBankAddress, address _tokenAddress, uint256 _value) public withdrawn(msg.sender) {
         if(_piggyBankAddress == address(0)) revert INVALID_ADDRESS();
         if(_tokenAddress == address(0)) revert INVALID_ADDRESS();
         if(_value == 0) revert INVALID_AMOUNT();
@@ -74,7 +80,7 @@ contract PiggyFactory is Ownable {
         emit SavingAdded(msg.sender, _piggyBankAddress, _tokenAddress, _value);
     }
     
-    function withdrawPiggyBank(address _piggyBankAddress) public {
+    function withdrawPiggyBank(address _piggyBankAddress) public withdrawn(msg.sender) {
         if(_piggyBankAddress == address(0)) revert INVALID_ADDRESS();
         
         bool found = false;
@@ -89,6 +95,8 @@ contract PiggyFactory is Ownable {
         }
         
         if(!found) revert UNAUTHORIZED();
+
+        isWithdrawn[msg.sender] = true;
     }
 
     function emergencyWithdrawPiggyBank(address _piggyBankAddress, address[] memory _tokenAddresses) public {
